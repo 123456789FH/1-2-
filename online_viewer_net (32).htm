@@ -1,0 +1,1705 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة التحفيز (طلاب + مجموعات)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f172a;
+      --text:#e8eefc;
+      --muted:#aab6d6;
+      --line:rgba(255,255,255,.10);
+      --accent:#5eead4;
+      --accent2:#60a5fa;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Tajawal", system-ui, -apple-system, Segoe UI, Arial;
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(96,165,250,.25), transparent 60%),
+        radial-gradient(1000px 700px at 100% 10%, rgba(94,234,212,.18), transparent 55%),
+        linear-gradient(180deg, #070b14, #0b1220 45%, #070b14);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    /* ✅ توسعة عامة */
+    .wrap{
+      max-width:1550px;
+      margin:0 auto;
+      padding:18px;
+      display:grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .wrap{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:14px 14px 10px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:linear-gradient(90deg, rgba(96,165,250,.10), rgba(94,234,212,.06));
+    }
+    .title{
+      font-weight:900;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      font-size:12px;
+      color:#0b1220;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      padding:4px 10px;
+      border-radius:999px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .bd{padding:14px}
+
+    /* Mode switch */
+    .modeSwitch{
+      display:flex;
+      gap:10px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+    .modeBtn{
+      flex:1;
+      min-width:150px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:900;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition: filter .15s ease, transform .08s ease;
+    }
+    .modeBtn:hover{filter:saturate(1.06)}
+    .modeBtn:active{transform:translateY(1px)}
+    .modeBtn.active{
+      color:#07101f;
+      border:0;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+
+    label{
+      font-size:12px;
+      color:var(--muted);
+      display:block;
+      margin:0 0 6px;
+    }
+    input, textarea{
+      width:100%;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      padding:10px 10px;
+      border-radius:12px;
+      outline:none;
+      font-family:inherit;
+    }
+    textarea{min-height:120px; resize:vertical}
+    input:focus, textarea:focus{border-color:rgba(94,234,212,.55)}
+    .row{display:grid; grid-template-columns:1fr; gap:10px}
+    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+
+    button{
+      border:0;
+      cursor:pointer;
+      font-family:inherit;
+      font-weight:900;
+      padding:10px 12px;
+      border-radius:14px;
+      color:#08101f;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      transition: transform .08s ease, filter .15s ease;
+    }
+    button:hover{filter:saturate(1.08)}
+    button:active{transform:translateY(1px)}
+    button.secondary{
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:none;
+    }
+    button.danger{
+      background:rgba(251,113,133,.18);
+      color:#ffd7df;
+      border:1px solid rgba(251,113,133,.35);
+      box-shadow:none;
+    }
+
+    .section{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.02);
+      border-radius:16px;
+      padding:12px;
+      margin-top:12px;
+    }
+    .sectionTitle{
+      font-weight:900;
+      margin:0 0 10px;
+      color:rgba(232,238,252,.95);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .small{font-size:12px;color:var(--muted); line-height:1.6}
+
+    /* Palette */
+    .palette{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      padding:12px;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+    }
+    .token{
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:900;
+    }
+    .token[draggable="true"]{cursor:grab}
+    .token:active{cursor:grabbing}
+
+    /* Board */
+    .boardWrap{padding:14px}
+    .board{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      overflow:hidden;
+    }
+    .boardHeader{
+      padding:18px 18px 12px;
+      border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(900px 320px at 0% 0%, rgba(96,165,250,.18), transparent 55%),
+        radial-gradient(900px 320px at 100% 0%, rgba(94,234,212,.16), transparent 55%),
+        rgba(255,255,255,.02);
+    }
+    .boardTitle{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .boardTitle h1{
+      margin:0;
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.04);
+      font-weight:900;
+    }
+
+    .infoGrid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+    }
+    @media (max-width: 980px){ .infoGrid{grid-template-columns: repeat(2,1fr)} }
+    .infoItem{
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.03);
+      min-height:56px;
+    }
+    .infoItem .k{color:var(--muted); font-size:12px}
+    .infoItem .v{font-weight:900; margin-top:4px; font-size:14px; white-space:pre-wrap}
+
+    .table{
+      width:100%;
+      border-collapse:collapse;
+    }
+    .table th, .table td{
+      border-bottom:1px solid rgba(255,255,255,.08);
+      padding:14px 12px;
+      vertical-align:middle;
+    }
+    .table th{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:900;
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .idx{width:56px; color:var(--muted); font-weight:900; text-align:center}
+
+    /* ===== Students board ===== */
+    .nameCell{
+      font-weight:900;
+      font-size:16px;
+      width:320px;
+      line-height:1.35;
+    }
+    .dropZone{
+      border:1px dashed rgba(255,255,255,.20);
+      background:rgba(255,255,255,.03);
+      border-radius:16px;
+      min-height:72px;
+      padding:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .dropZone.dragover{
+      border-color: rgba(94,234,212,.65);
+      box-shadow: 0 0 0 3px rgba(94,234,212,.10) inset;
+    }
+    .stars{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      flex:1;
+      min-width:200px;
+    }
+    .star{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      cursor:pointer;
+      user-select:none;
+      font-size:22px;
+      line-height:1;
+    }
+    .sum{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+      color:var(--muted);
+      font-weight:900;
+      font-size:12px;
+    }
+    .sum b{
+      color:var(--text);
+      font-size:14px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+    }
+    .miniBtn{
+      padding:7px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-weight:900;
+      cursor:pointer;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .miniBtns{display:flex; gap:8px; align-items:center}
+
+    /* ===== Groups board ===== */
+    .groupCell{
+      font-weight:900;
+      font-size:16px;
+      width:280px;
+      line-height:1.35;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .groupName{flex:1; min-width:120px}
+
+    .critZone{
+      border:1px dashed rgba(255,255,255,.20);
+      background:rgba(255,255,255,.03);
+      border-radius:16px;
+      min-height:62px;
+      padding:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .critZone.dragover{
+      border-color: rgba(94,234,212,.65);
+      box-shadow: 0 0 0 3px rgba(94,234,212,.10) inset;
+    }
+    .critLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:120px;
+    }
+    .critIcon{
+      font-size:18px;
+      width:30px;
+      height:30px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+    }
+    .critCount{
+      font-weight:900;
+      font-size:18px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      min-width:54px;
+      text-align:center;
+      cursor:pointer;
+      user-select:none;
+    }
+    .critBtns{display:flex; gap:8px; align-items:center}
+    .critBtn{
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:900;
+      cursor:pointer;
+    }
+    .totalBadge{
+      font-weight:900;
+      font-size:16px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      text-align:center;
+      min-width:64px;
+      display:inline-block;
+    }
+    tfoot td{
+      background:rgba(255,255,255,.02);
+      font-weight:900;
+      color:rgba(232,238,252,.95);
+    }
+
+    .footer{
+      padding:12px 18px 14px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+    .footer .sig{font-weight:900; color:rgba(232,238,252,.95)}
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      bottom:16px;
+      left:16px;
+      right:16px;
+      display:flex;
+      justify-content:center;
+      pointer-events:none;
+      z-index:50;
+    }
+    .toast .box{
+      pointer-events:none;
+      background:rgba(17, 28, 53, .92);
+      border:1px solid rgba(255,255,255,.14);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      max-width:860px;
+      width:100%;
+      box-shadow:var(--shadow);
+      opacity:0;
+      transform:translateY(10px);
+      transition: opacity .18s ease, transform .18s ease;
+      text-align:center;
+      font-weight:900;
+    }
+    .toast .box.show{opacity:1; transform:translateY(0)}
+
+    /* Mode visibility */
+    body[data-mode="students"] .only-groups{display:none !important;}
+    body[data-mode="groups"] .only-students{display:none !important;}
+
+    /* Print footer */
+    #printFooter{display:none; font-family:"Tajawal", Arial;}
+
+    /* ===== Export / Print (High Contrast) ===== */
+    body.exporting{
+      background:#fff !important;
+      color:#0f172a !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+
+      --text:#0f172a;
+      --muted:#475569;
+      --line:rgba(15,23,42,.18);
+      --shadow:none;
+    }
+    body.exporting .controls{display:none !important;}
+    body.exporting .wrap{grid-template-columns:1fr !important;}
+    body.exporting .card,
+    body.exporting .board,
+    body.exporting .boardHeader{
+      background:#fff !important;
+      box-shadow:none !important;
+    }
+    body.exporting .table th{
+      color:#334155 !important;
+      background:#f1f5f9 !important;
+    }
+    body.exporting .table td{ color:#0f172a !important; }
+    body.exporting .nameCell{ color:#0f172a !important; font-weight:900 !important; }
+    body.exporting .dropZone,
+    body.exporting .critZone{
+      background:#fff !important;
+      border-color:rgba(15,23,42,.22) !important;
+    }
+    body.exporting .star,
+    body.exporting .critBtn,
+    body.exporting .critIcon,
+    body.exporting .critCount,
+    body.exporting .totalBadge,
+    body.exporting .miniBtn,
+    body.exporting .badge{
+      color:#0f172a !important;
+      border-color:rgba(15,23,42,.22) !important;
+      background:#fff !important;
+    }
+
+    @media print{
+      @page{ margin: 12mm 10mm 18mm 10mm; }
+      body{
+        background:#fff !important;
+        color:#0f172a !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .controls{ display:none !important; }
+      .wrap{ grid-template-columns:1fr !important; }
+      .card, .board, .boardHeader{ background:#fff !important; box-shadow:none !important; }
+      .table th{ color:#334155 !important; background:#f1f5f9 !important; }
+      .table td{ color:#0f172a !important; }
+      .footer{display:none !important;} /* منع التكرار */
+      #printFooter{
+        display:block !important;
+        position: fixed;
+        left:0; right:0; bottom:0;
+        background:#fff;
+        color:#0f172a;
+        border-top:1px solid rgba(15,23,42,.18);
+        padding:8px 14px;
+        text-align:center;
+        font-size:12px;
+        font-weight:900;
+        z-index:9999;
+      }
+    }
+  </style>
+</head>
+
+<body data-mode="students">
+  <div class="wrap">
+    <!-- Controls -->
+    <div class="card controls">
+      <div class="hd">
+        <div class="title">🧠 لوحة التحفيز <span class="pill">طلاب + مجموعات</span></div>
+      </div>
+
+      <div class="bd">
+        <div class="modeSwitch">
+          <button class="modeBtn active" id="btnModeStudents">👩‍🎓 الطلاب/الطالبات</button>
+          <button class="modeBtn" id="btnModeGroups">👥 المجموعات</button>
+        </div>
+
+        <!-- ===== Students Controls ===== -->
+        <div class="only-students">
+          <div class="section">
+            <div class="sectionTitle">بيانات اللوحة (طلاب/طالبات)</div>
+
+            <div class="row2">
+              <div>
+                <label>الإدارة/مكتب التعليم</label>
+                <input id="s_admin" placeholder="مثال: إدارة التعليم..." />
+              </div>
+              <div>
+                <label>المدرسة</label>
+                <input id="s_school" placeholder="مثال: مدرسة ..." />
+              </div>
+            </div>
+
+            <div class="row2" style="margin-top:10px;">
+              <div>
+                <label>الصف</label>
+                <input id="s_grade" placeholder="مثال: ثالث ابتدائي" />
+              </div>
+              <div>
+                <label>الشعبة/الفصل</label>
+                <input id="s_section" placeholder="مثال: (أ)" />
+              </div>
+            </div>
+
+            <div class="row2" style="margin-top:10px;">
+              <div>
+                <label>المادة</label>
+                <input id="s_subject" placeholder="مثال: الرياضيات" />
+              </div>
+              <div>
+                <label>الحصة</label>
+                <input id="s_period" placeholder="مثال: الحصة الأولى" />
+              </div>
+            </div>
+
+            <div class="row2" style="margin-top:10px;">
+              <div>
+                <label>اسم المعلم/ـة</label>
+                <input id="s_teacher" placeholder="اكتبي اسمك هنا" />
+              </div>
+              <div>
+                <label>التاريخ</label>
+                <input id="s_date" placeholder="مثال: ١٨/٠١/٢٠٢٦" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="sectionTitle">🎖️ نجوم السحب والإفلات</div>
+            <div class="palette" id="studentPalette">
+              <span class="token" draggable="true" data-star="gold">⭐ نجمة</span>
+              <span class="token" draggable="true" data-star="sparkle">🌟 نجمة متوهجة</span>
+              <span class="token" draggable="true" data-star="medal">🏅 وسام</span>
+              <span class="small">اضغطي على النجمة داخل الصف لإزالتها.</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="sectionTitle">الأسماء</div>
+            <label>إضافة أسماء (سطر لكل اسم)</label>
+            <textarea id="s_names" placeholder="مثال:
+نورة
+سارة
+ريم"></textarea>
+
+            <div class="btns">
+              <button id="s_add">➕ إضافة الأسماء</button>
+              <button class="secondary" id="s_sort">↕️ ترتيب حسب النجوم</button>
+              <button class="secondary" id="s_reset">🔄 تصفير النجوم</button>
+              <button class="danger" id="s_clear">🗑️ مسح القائمة</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="sectionTitle">التصدير (طلاب/طالبات)</div>
+            <div class="btns">
+              <button id="s_pdf">📄 تصدير PDF</button>
+              <button class="secondary" id="s_json">💾 تصدير JSON</button>
+              <label class="miniBtn" style="display:inline-flex;align-items:center;gap:8px;">
+                ⬆️ استيراد JSON
+                <input id="s_file_json" type="file" accept="application/json" style="display:none">
+              </label>
+              <button class="secondary" id="saveNow">💾 حفظ الآن</button>
+            </div>
+          </div>
+
+          <div class="small">✅ التذييل ثابت وغير قابل للتعديل.</div>
+        </div>
+
+        <!-- ===== Groups Controls ===== -->
+        <div class="only-groups">
+          <div class="section">
+            <div class="sectionTitle">بيانات اللوحة (مجموعات)</div>
+            <div class="row2">
+              <div>
+                <label>الصف</label>
+                <input id="g_grade" placeholder="مثال: ثالث ابتدائي" />
+              </div>
+              <div>
+                <label>اسم المعلم/ـة</label>
+                <input id="g_teacher" placeholder="اكتبي اسمك هنا" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <div>
+                <label>التاريخ</label>
+                <input id="g_date" placeholder="مثال: ١٨/٠١/٢٠٢٦" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="sectionTitle">🎯 نقاط السحب والإفلات</div>
+            <div class="palette" id="groupPalette">
+              <span class="token" draggable="true" data-points="1">⭐ +1</span>
+              <span class="token" draggable="true" data-points="2">🌟 +2</span>
+              <span class="token" draggable="true" data-points="3">🏅 +3</span>
+              <span class="small">اسحبي النقاط وأفلتيها داخل البند. اضغطي على الرقم لإزالة (-1).</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="sectionTitle">المجموعات</div>
+            <label>إضافة أسماء المجموعات (سطر لكل مجموعة)</label>
+            <textarea id="g_groups" placeholder="مثال:
+المجموعة 1
+المجموعة 2
+المجموعة 3"></textarea>
+
+            <div class="btns">
+              <button id="g_add">➕ إضافة المجموعات</button>
+              <button class="secondary" id="g_sort">↕️ ترتيب حسب المجموع</button>
+              <button class="secondary" id="g_reset">🔄 تصفير النقاط</button>
+              <button class="danger" id="g_clear">🗑️ مسح القائمة</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="sectionTitle">التصدير (مجموعات)</div>
+            <div class="btns">
+              <button id="g_pdf">📄 تصدير PDF</button>
+              <button class="secondary" id="g_json">💾 تصدير JSON</button>
+              <label class="miniBtn" style="display:inline-flex;align-items:center;gap:8px;">
+                ⬆️ استيراد JSON
+                <input id="g_file_json" type="file" accept="application/json" style="display:none">
+              </label>
+              <button class="secondary" id="saveNow2">💾 حفظ الآن</button>
+            </div>
+          </div>
+
+          <div class="small">✅ هذا الوضع لا يحتاج إدارة/مدرسة — فقط الصف والمعلم/ـة.</div>
+        </div>
+
+        <div class="section">
+          <div class="sectionTitle">خيارات عامة</div>
+          <div class="btns">
+            <button class="secondary" id="exportAllJson">💾 تصدير JSON (الكل)</button>
+          </div>
+          <div class="small">هذا الخيار يصدر بيانات الطلاب + المجموعات معًا في ملف واحد.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Board -->
+    <div class="card">
+      <div class="hd">
+        <div class="title">📌 لوحة العرض <span class="pill" id="countPill">—</span></div>
+        <div class="badge">🟢 <span id="saveState">محفوظ</span></div>
+      </div>
+
+      <div class="boardWrap">
+
+        <!-- ===== Students Board ===== -->
+        <div class="board only-students" id="boardStudents">
+          <div class="boardHeader">
+            <div class="boardTitle">
+              <div>
+                <h1>لوحة التحفيز (طلاب/طالبات) ⭐</h1>
+                <div class="sub">اسحبي النجمة وأفلتيها على الاسم — واضغطي على النجمة لإزالتها</div>
+              </div>
+              <div class="badge" id="stampStudents">آخر تحديث: —</div>
+            </div>
+
+            <div class="infoGrid">
+              <div class="infoItem"><div class="k">الإدارة</div><div class="v" id="v_s_admin">—</div></div>
+              <div class="infoItem"><div class="k">المدرسة</div><div class="v" id="v_s_school">—</div></div>
+              <div class="infoItem"><div class="k">الصف</div><div class="v" id="v_s_grade">—</div></div>
+              <div class="infoItem"><div class="k">الشعبة</div><div class="v" id="v_s_section">—</div></div>
+
+              <div class="infoItem"><div class="k">المادة</div><div class="v" id="v_s_subject">—</div></div>
+              <div class="infoItem"><div class="k">الحصة</div><div class="v" id="v_s_period">—</div></div>
+              <div class="infoItem"><div class="k">المعلم/ـة</div><div class="v" id="v_s_teacher">—</div></div>
+              <div class="infoItem"><div class="k">التاريخ</div><div class="v" id="v_s_date">—</div></div>
+            </div>
+          </div>
+
+          <div style="padding:8px 0;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="idx">#</th>
+                  <th>الاسم</th>
+                  <th>النجوم/الأوسمة (اسحب وأفلت هنا)</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyStudents"></tbody>
+            </table>
+          </div>
+
+          <div class="footer">
+            <div class="sig" id="footerInsideStudents">—</div>
+            <div>© لوحة التحفيز — يتم حفظ البيانات على جهازك فقط</div>
+          </div>
+        </div>
+
+        <!-- ===== Groups Board ===== -->
+        <div class="board only-groups" id="boardGroups">
+          <div class="boardHeader">
+            <div class="boardTitle">
+              <div>
+                <h1>لوحة تحفيز للمجموعات 👥</h1>
+                <div class="sub">البنود: الهدوء – التعاون – سرعة الإنجاز – صحة المعلومة</div>
+              </div>
+              <div class="badge" id="stampGroups">آخر تحديث: —</div>
+            </div>
+
+            <div class="infoGrid" style="grid-template-columns:repeat(3,1fr)">
+              <div class="infoItem"><div class="k">الصف</div><div class="v" id="v_g_grade">—</div></div>
+              <div class="infoItem"><div class="k">المعلم/ـة</div><div class="v" id="v_g_teacher">—</div></div>
+              <div class="infoItem"><div class="k">التاريخ</div><div class="v" id="v_g_date">—</div></div>
+            </div>
+          </div>
+
+          <div style="padding:8px 0; overflow:auto;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="idx">#</th>
+                  <th>المجموعة</th>
+                  <th>🔇 الهدوء</th>
+                  <th>🤝 التعاون</th>
+                  <th>⚡ سرعة الإنجاز</th>
+                  <th>✅ صحة المعلومة</th>
+                  <th>المجموع</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyGroups"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" style="text-align:right;">إجمالي الصف</td>
+                  <td id="t_calm">0</td>
+                  <td id="t_coop">0</td>
+                  <td id="t_speed">0</td>
+                  <td id="t_acc">0</td>
+                  <td id="t_total">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="footer">
+            <div class="sig" id="footerInsideGroups">—</div>
+            <div>© لوحة تحفيز المجموعات — يتم حفظ البيانات على جهازك فقط</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ تذييل الطباعة الثابت -->
+  <div id="printFooter"></div>
+
+  <!-- Toast -->
+  <div class="toast"><div class="box" id="toastBox">تم</div></div>
+
+  <!-- Libraries for PDF export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <script>
+    // ========= ثابت: التذييل غير قابل للتعديل =========
+    const FOOTER_TEXT = "أ/ فاطمة هزازي | ملتقى معلمي ومعلمات الرياضيات | ملتقى التعليم التفاعلي";
+    const STORAGE_KEY = "motivation_allinone_v1";
+
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+    const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
+    const deepClone = (obj) => (window.structuredClone ? structuredClone(obj) : JSON.parse(JSON.stringify(obj)));
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function dateOnly(){
+      const d = new Date();
+      return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+    }
+    function nowStamp(){
+      const d = new Date();
+      return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+    function toast(msg){
+      const box = $("#toastBox");
+      box.textContent = msg;
+      box.classList.add("show");
+      setTimeout(()=> box.classList.remove("show"), 1600);
+    }
+    function downloadFile(filename, content, mime){
+      const blob = new Blob([content], {type: mime});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    }
+
+    // ===== Students stars =====
+    const STAR_TYPES = {
+      gold:   {label:"نجمة", symbol:"⭐"},
+      sparkle:{label:"نجمة متوهجة", symbol:"🌟"},
+      medal:  {label:"وسام", symbol:"🏅"}
+    };
+
+    // ===== Groups criteria =====
+    const CRIT = {
+      calm:     {label:"الهدوء", icon:"🔇"},
+      coop:     {label:"التعاون", icon:"🤝"},
+      speed:    {label:"سرعة الإنجاز", icon:"⚡"},
+      accuracy: {label:"صحة المعلومة", icon:"✅"},
+    };
+
+    const defaultState = {
+      meta:{ app:"لوحة التحفيز (طلاب + مجموعات)", version:"2.0.0" },
+      activeMode:"students",
+      studentsBoard:{
+        header:{
+          admin:"", school:"", grade:"", section:"",
+          subject:"الرياضيات", period:"",
+          teacher:"", date:""
+        },
+        students:[]
+      },
+      groupsBoard:{
+        header:{ grade:"", teacher:"", date:"" },
+        groups:[]
+      }
+    };
+
+    let state = loadState();
+    let saveTimer = null;
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return deepClone(defaultState);
+        const parsed = JSON.parse(raw);
+
+        const fixed = deepClone(defaultState);
+
+        fixed.activeMode = (parsed.activeMode === "groups") ? "groups" : "students";
+
+        // students
+        fixed.studentsBoard.header = { ...fixed.studentsBoard.header, ...(parsed.studentsBoard?.header||{}) };
+        fixed.studentsBoard.students = Array.isArray(parsed.studentsBoard?.students) ? parsed.studentsBoard.students : [];
+
+        // groups
+        fixed.groupsBoard.header = { ...fixed.groupsBoard.header, ...(parsed.groupsBoard?.header||{}) };
+        fixed.groupsBoard.groups = Array.isArray(parsed.groupsBoard?.groups) ? parsed.groupsBoard.groups : [];
+
+        // ensure dates
+        if(!fixed.studentsBoard.header.date) fixed.studentsBoard.header.date = dateOnly();
+        if(!fixed.groupsBoard.header.date) fixed.groupsBoard.header.date = dateOnly();
+
+        return fixed;
+      }catch(e){
+        return deepClone(defaultState);
+      }
+    }
+
+    function markSaving(isSaving){
+      $("#saveState").textContent = isSaving ? "جارٍ الحفظ..." : "محفوظ";
+    }
+    function saveState(immediate=false){
+      markSaving(true);
+      if(saveTimer) clearTimeout(saveTimer);
+      const doSave = () => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        markSaving(false);
+        $("#stampStudents").textContent = "آخر تحديث: " + nowStamp();
+        $("#stampGroups").textContent = "آخر تحديث: " + nowStamp();
+      };
+      if(immediate) doSave();
+      else saveTimer = setTimeout(doSave, 250);
+    }
+
+    function setMode(mode){
+      state.activeMode = (mode === "groups") ? "groups" : "students";
+      document.body.setAttribute("data-mode", state.activeMode);
+
+      $("#btnModeStudents").classList.toggle("active", state.activeMode === "students");
+      $("#btnModeGroups").classList.toggle("active", state.activeMode === "groups");
+
+      renderAll();
+      saveState();
+    }
+
+    // ========= Render helpers =========
+    function setText(sel, val){
+      const el = $(sel);
+      el.textContent = (val && String(val).trim()) ? val : "—";
+    }
+
+    // ========= Students render =========
+    function countAwards(s){ return (s.awards?.length || 0); }
+
+    function renderStudents(){
+      const h = state.studentsBoard.header;
+
+      setText("#v_s_admin", h.admin);
+      setText("#v_s_school", h.school);
+      setText("#v_s_grade", h.grade);
+      setText("#v_s_section", h.section);
+      setText("#v_s_subject", h.subject);
+      setText("#v_s_period", h.period);
+      setText("#v_s_teacher", h.teacher);
+      setText("#v_s_date", h.date);
+
+      $("#footerInsideStudents").textContent = FOOTER_TEXT;
+
+      const tbody = $("#tbodyStudents");
+      tbody.innerHTML = "";
+
+      state.studentsBoard.students.forEach((s, idx)=>{
+        const tr = document.createElement("tr");
+
+        const tdIdx = document.createElement("td");
+        tdIdx.className = "idx";
+        tdIdx.textContent = idx+1;
+
+        const tdName = document.createElement("td");
+        tdName.className = "nameCell";
+        tdName.textContent = s.name;
+
+        const tdDrop = document.createElement("td");
+        const zone = document.createElement("div");
+        zone.className = "dropZone";
+        zone.dataset.studentId = s.id;
+
+        const stars = document.createElement("div");
+        stars.className = "stars";
+
+        (s.awards || []).forEach((a, i)=>{
+          const st = document.createElement("span");
+          st.className = "star";
+          st.title = "اضغطي لإزالة";
+          st.textContent = STAR_TYPES[a.type]?.symbol || "⭐";
+          st.addEventListener("click", ()=> removeStudentAward(s.id, i));
+          stars.appendChild(st);
+        });
+
+        const right = document.createElement("div");
+        right.className = "sum";
+
+        const total = document.createElement("b");
+        total.textContent = countAwards(s);
+
+        const mini = document.createElement("div");
+        mini.className = "miniBtns";
+
+        const addBtn = document.createElement("button");
+        addBtn.className = "miniBtn";
+        addBtn.type = "button";
+        addBtn.textContent = "＋";
+        addBtn.title = "إضافة نجمة (اختيار سريع)";
+        addBtn.addEventListener("click", ()=> {
+          const t = prompt("اكتبي النوع: gold أو sparkle أو medal", "gold");
+          const type = STAR_TYPES[t] ? t : "gold";
+          addStudentAward(s.id, type);
+        });
+
+        const menuBtn = document.createElement("button");
+        menuBtn.className = "miniBtn";
+        menuBtn.type = "button";
+        menuBtn.textContent = "…";
+        menuBtn.title = "خيارات";
+        menuBtn.addEventListener("click", ()=> openStudentMenu(s.id));
+
+        mini.appendChild(addBtn);
+        mini.appendChild(menuBtn);
+
+        right.appendChild(document.createTextNode("المجموع "));
+        right.appendChild(total);
+        right.appendChild(mini);
+
+        zone.addEventListener("dragover", (ev)=>{ ev.preventDefault(); zone.classList.add("dragover"); });
+        zone.addEventListener("dragleave", ()=> zone.classList.remove("dragover"));
+        zone.addEventListener("drop", (ev)=>{
+          ev.preventDefault();
+          zone.classList.remove("dragover");
+          const type = ev.dataTransfer.getData("text/starType") || "gold";
+          addStudentAward(s.id, STAR_TYPES[type] ? type : "gold");
+        });
+
+        zone.appendChild(stars);
+        zone.appendChild(right);
+        tdDrop.appendChild(zone);
+
+        tr.appendChild(tdIdx);
+        tr.appendChild(tdName);
+        tr.appendChild(tdDrop);
+        tbody.appendChild(tr);
+      });
+
+      $("#countPill").textContent = `${state.studentsBoard.students.length} اسم`;
+    }
+
+    // ========= Groups render =========
+    function groupTotal(g){
+      const s = g.scores || {};
+      return (s.calm||0) + (s.coop||0) + (s.speed||0) + (s.accuracy||0);
+    }
+    function totalsAll(){
+      const t = {calm:0, coop:0, speed:0, accuracy:0, total:0};
+      state.groupsBoard.groups.forEach(g=>{
+        t.calm += g.scores?.calm||0;
+        t.coop += g.scores?.coop||0;
+        t.speed += g.scores?.speed||0;
+        t.accuracy += g.scores?.accuracy||0;
+      });
+      t.total = t.calm + t.coop + t.speed + t.accuracy;
+      return t;
+    }
+
+    function makeCritCell(g, key){
+      const td = document.createElement("td");
+
+      const zone = document.createElement("div");
+      zone.className = "critZone";
+      zone.dataset.groupId = g.id;
+      zone.dataset.crit = key;
+
+      zone.addEventListener("dragover", (ev)=>{ ev.preventDefault(); zone.classList.add("dragover"); });
+      zone.addEventListener("dragleave", ()=> zone.classList.remove("dragover"));
+      zone.addEventListener("drop", (ev)=>{
+        ev.preventDefault();
+        zone.classList.remove("dragover");
+        const p = parseInt(ev.dataTransfer.getData("text/points") || "1", 10);
+        adjustGroupScore(g.id, key, Number.isFinite(p) ? p : 1);
+      });
+      zone.addEventListener("dblclick", ()=> adjustGroupScore(g.id, key, 1));
+
+      const left = document.createElement("div");
+      left.className = "critLeft";
+
+      const icon = document.createElement("span");
+      icon.className = "critIcon";
+      icon.textContent = CRIT[key].icon;
+
+      const count = document.createElement("span");
+      count.className = "critCount";
+      count.textContent = (g.scores?.[key] ?? 0);
+      count.title = "اضغطي لإزالة (-1)";
+      count.addEventListener("click", ()=> adjustGroupScore(g.id, key, -1));
+
+      left.appendChild(icon);
+      left.appendChild(count);
+
+      const btns = document.createElement("div");
+      btns.className = "critBtns";
+
+      const plus = document.createElement("button");
+      plus.className = "critBtn";
+      plus.type = "button";
+      plus.textContent = "+";
+      plus.addEventListener("click", ()=> adjustGroupScore(g.id, key, 1));
+
+      const minus = document.createElement("button");
+      minus.className = "critBtn";
+      minus.type = "button";
+      minus.textContent = "−";
+      minus.addEventListener("click", ()=> adjustGroupScore(g.id, key, -1));
+
+      btns.appendChild(plus);
+      btns.appendChild(minus);
+
+      zone.appendChild(left);
+      zone.appendChild(btns);
+
+      td.appendChild(zone);
+      return td;
+    }
+
+    function renderGroups(){
+      const h = state.groupsBoard.header;
+
+      setText("#v_g_grade", h.grade);
+      setText("#v_g_teacher", h.teacher);
+      setText("#v_g_date", h.date);
+
+      $("#footerInsideGroups").textContent = FOOTER_TEXT;
+
+      const tbody = $("#tbodyGroups");
+      tbody.innerHTML = "";
+
+      state.groupsBoard.groups.forEach((g, idx)=>{
+        const tr = document.createElement("tr");
+
+        const tdIdx = document.createElement("td");
+        tdIdx.className = "idx";
+        tdIdx.textContent = idx+1;
+
+        const tdGroup = document.createElement("td");
+        tdGroup.className = "groupCell";
+
+        const name = document.createElement("div");
+        name.className = "groupName";
+        name.textContent = g.name;
+
+        const menu = document.createElement("button");
+        menu.className = "miniBtn";
+        menu.type = "button";
+        menu.textContent = "…";
+        menu.title = "خيارات المجموعة";
+        menu.addEventListener("click", ()=> openGroupMenu(g.id));
+
+        tdGroup.appendChild(name);
+        tdGroup.appendChild(menu);
+
+        tr.appendChild(tdIdx);
+        tr.appendChild(tdGroup);
+
+        tr.appendChild(makeCritCell(g, "calm"));
+        tr.appendChild(makeCritCell(g, "coop"));
+        tr.appendChild(makeCritCell(g, "speed"));
+        tr.appendChild(makeCritCell(g, "accuracy"));
+
+        const tdTotal = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = "totalBadge";
+        badge.textContent = groupTotal(g);
+        tdTotal.appendChild(badge);
+        tr.appendChild(tdTotal);
+
+        tbody.appendChild(tr);
+      });
+
+      const t = totalsAll();
+      $("#t_calm").textContent = t.calm;
+      $("#t_coop").textContent = t.coop;
+      $("#t_speed").textContent = t.speed;
+      $("#t_acc").textContent = t.accuracy;
+      $("#t_total").textContent = t.total;
+
+      $("#countPill").textContent = `${state.groupsBoard.groups.length} مجموعة`;
+    }
+
+    // ========= Render all =========
+    function renderAll(){
+      // print footer
+      $("#printFooter").textContent = FOOTER_TEXT;
+
+      // sync inputs (students)
+      $("#s_admin").value = state.studentsBoard.header.admin || "";
+      $("#s_school").value = state.studentsBoard.header.school || "";
+      $("#s_grade").value = state.studentsBoard.header.grade || "";
+      $("#s_section").value = state.studentsBoard.header.section || "";
+      $("#s_subject").value = state.studentsBoard.header.subject || "";
+      $("#s_period").value = state.studentsBoard.header.period || "";
+      $("#s_teacher").value = state.studentsBoard.header.teacher || "";
+      $("#s_date").value = state.studentsBoard.header.date || "";
+
+      // sync inputs (groups)
+      $("#g_grade").value = state.groupsBoard.header.grade || "";
+      $("#g_teacher").value = state.groupsBoard.header.teacher || "";
+      $("#g_date").value = state.groupsBoard.header.date || "";
+
+      // render boards
+      renderStudents();
+      renderGroups();
+
+      $("#stampStudents").textContent = "آخر تحديث: " + nowStamp();
+      $("#stampGroups").textContent = "آخر تحديث: " + nowStamp();
+    }
+
+    // ========= Students actions =========
+    function addStudentsFromTextarea(){
+      const raw = $("#s_names").value;
+      const names = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+      if(!names.length){ toast("اكتبي اسمًا واحدًا على الأقل"); return; }
+      const newOnes = names.map(name => ({ id: uid(), name, awards: [] }));
+      state.studentsBoard.students.push(...newOnes);
+      $("#s_names").value = "";
+      renderStudents();
+      saveState();
+      toast("تمت إضافة الأسماء ✅");
+    }
+    function addStudentAward(studentId, type){
+      const s = state.studentsBoard.students.find(x=>x.id===studentId);
+      if(!s) return;
+      if(!s.awards) s.awards = [];
+      s.awards.push({ type, at: new Date().toISOString() });
+      renderStudents();
+      saveState();
+    }
+    function removeStudentAward(studentId, awardIndex){
+      const s = state.studentsBoard.students.find(x=>x.id===studentId);
+      if(!s || !s.awards) return;
+      s.awards.splice(awardIndex, 1);
+      renderStudents();
+      saveState();
+    }
+    function resetStudents(){
+      state.studentsBoard.students.forEach(s=> s.awards = []);
+      renderStudents();
+      saveState();
+      toast("تم تصفير النجوم للجميع");
+    }
+    function clearStudents(){
+      state.studentsBoard.students = [];
+      renderStudents();
+      saveState();
+      toast("تم مسح القائمة");
+    }
+    function sortStudents(){
+      state.studentsBoard.students.sort((a,b)=> countAwards(b)-countAwards(a));
+      renderStudents();
+      saveState();
+      toast("تم الترتيب حسب النجوم");
+    }
+    function openStudentMenu(studentId){
+      const s = state.studentsBoard.students.find(x=>x.id===studentId);
+      if(!s) return;
+      const choice = prompt(
+`اختاري رقم العملية:
+1) إعادة تسمية
+2) تصفير نجوم هذا الطالب/ـة
+3) حذف الطالب/ـة`,
+"1"
+      );
+      if(!choice) return;
+
+      if(choice.trim()==="1"){
+        const newName = prompt("اكتبي الاسم الجديد:", s.name);
+        if(newName && newName.trim()){
+          s.name = newName.trim();
+          renderStudents(); saveState(); toast("تم تحديث الاسم");
+        }
+      }else if(choice.trim()==="2"){
+        s.awards = [];
+        renderStudents(); saveState(); toast("تم تصفير نجوم الطالب/ـة");
+      }else if(choice.trim()==="3"){
+        state.studentsBoard.students = state.studentsBoard.students.filter(x=>x.id!==studentId);
+        renderStudents(); saveState(); toast("تم حذف الطالب/ـة");
+      }
+    }
+
+    // ========= Groups actions =========
+    function addGroupsFromTextarea(){
+      const raw = $("#g_groups").value;
+      const names = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+      if(!names.length){ toast("اكتبي اسم مجموعة واحدة على الأقل"); return; }
+      const newOnes = names.map(n=>({
+        id: uid(),
+        name: n,
+        scores: { calm:0, coop:0, speed:0, accuracy:0 }
+      }));
+      state.groupsBoard.groups.push(...newOnes);
+      $("#g_groups").value = "";
+      renderGroups();
+      saveState();
+      toast("تمت إضافة المجموعات ✅");
+    }
+    function adjustGroupScore(groupId, critKey, delta){
+      const g = state.groupsBoard.groups.find(x=>x.id===groupId);
+      if(!g) return;
+      if(!g.scores) g.scores = { calm:0, coop:0, speed:0, accuracy:0 };
+      const curr = g.scores[critKey] || 0;
+      g.scores[critKey] = Math.max(0, curr + delta);
+      renderGroups();
+      saveState();
+    }
+    function resetGroups(){
+      state.groupsBoard.groups.forEach(g=> g.scores = { calm:0, coop:0, speed:0, accuracy:0 });
+      renderGroups();
+      saveState();
+      toast("تم تصفير النقاط للجميع");
+    }
+    function clearGroups(){
+      state.groupsBoard.groups = [];
+      renderGroups();
+      saveState();
+      toast("تم مسح القائمة");
+    }
+    function sortGroups(){
+      state.groupsBoard.groups.sort((a,b)=> groupTotal(b)-groupTotal(a));
+      renderGroups();
+      saveState();
+      toast("تم الترتيب حسب المجموع");
+    }
+    function openGroupMenu(groupId){
+      const g = state.groupsBoard.groups.find(x=>x.id===groupId);
+      if(!g) return;
+      const choice = prompt(
+`اختاري رقم العملية:
+1) إعادة تسمية المجموعة
+2) تصفير نقاط المجموعة
+3) حذف المجموعة`,
+"1"
+      );
+      if(!choice) return;
+
+      if(choice.trim()==="1"){
+        const newName = prompt("اكتبي الاسم الجديد:", g.name);
+        if(newName && newName.trim()){
+          g.name = newName.trim();
+          renderGroups(); saveState(); toast("تم تحديث الاسم");
+        }
+      }else if(choice.trim()==="2"){
+        g.scores = { calm:0, coop:0, speed:0, accuracy:0 };
+        renderGroups(); saveState(); toast("تم تصفير نقاط المجموعة");
+      }else if(choice.trim()==="3"){
+        state.groupsBoard.groups = state.groupsBoard.groups.filter(x=>x.id!==groupId);
+        renderGroups(); saveState(); toast("تم حذف المجموعة");
+      }
+    }
+
+    // ========= Inputs binding =========
+    function bindInputs(){
+      // students header
+      ["s_admin","s_school","s_grade","s_section","s_subject","s_period","s_teacher","s_date"].forEach(id=>{
+        $("#"+id).addEventListener("input", ()=>{
+          const h = state.studentsBoard.header;
+          h.admin = $("#s_admin").value.trim();
+          h.school = $("#s_school").value.trim();
+          h.grade = $("#s_grade").value.trim();
+          h.section = $("#s_section").value.trim();
+          h.subject = $("#s_subject").value.trim();
+          h.period = $("#s_period").value.trim();
+          h.teacher = $("#s_teacher").value.trim();
+          h.date = $("#s_date").value.trim() || dateOnly();
+          renderStudents();
+          saveState();
+        });
+      });
+
+      // groups header
+      ["g_grade","g_teacher","g_date"].forEach(id=>{
+        $("#"+id).addEventListener("input", ()=>{
+          const h = state.groupsBoard.header;
+          h.grade = $("#g_grade").value.trim();
+          h.teacher = $("#g_teacher").value.trim();
+          h.date = $("#g_date").value.trim() || dateOnly();
+          renderGroups();
+          saveState();
+        });
+      });
+    }
+
+    // ========= Drag palettes =========
+    function setupPalettes(){
+      // student palette -> star type
+      $$("#studentPalette .token").forEach(el=>{
+        el.addEventListener("dragstart", (ev)=>{
+          ev.dataTransfer.setData("text/starType", el.dataset.star || "gold");
+          ev.dataTransfer.effectAllowed = "copy";
+        });
+      });
+
+      // group palette -> points
+      $$("#groupPalette .token").forEach(el=>{
+        el.addEventListener("dragstart", (ev)=>{
+          ev.dataTransfer.setData("text/points", el.dataset.points || "1");
+          ev.dataTransfer.effectAllowed = "copy";
+        });
+      });
+    }
+
+    // ========= JSON export/import =========
+    function exportStudentsJSON(){
+      const payload = {
+        app: state.meta.app,
+        version: state.meta.version,
+        mode: "students",
+        exportedAt: new Date().toISOString(),
+        exportedAtDisplay: nowStamp(),
+        footer: FOOTER_TEXT,
+        data: {
+          header: state.studentsBoard.header,
+          students: state.studentsBoard.students
+        }
+      };
+      downloadFile(`لوحة-الطلاب_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
+      toast("تم تصدير JSON (طلاب)");
+    }
+    function exportGroupsJSON(){
+      const payload = {
+        app: state.meta.app,
+        version: state.meta.version,
+        mode: "groups",
+        exportedAt: new Date().toISOString(),
+        exportedAtDisplay: nowStamp(),
+        footer: FOOTER_TEXT,
+        data: {
+          header: state.groupsBoard.header,
+          groups: state.groupsBoard.groups
+        }
+      };
+      downloadFile(`لوحة-المجموعات_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
+      toast("تم تصدير JSON (مجموعات)");
+    }
+    function exportAllJSON(){
+      const payload = {
+        app: state.meta.app,
+        version: state.meta.version,
+        mode: "all",
+        exportedAt: new Date().toISOString(),
+        exportedAtDisplay: nowStamp(),
+        footer: FOOTER_TEXT,
+        activeMode: state.activeMode,
+        studentsBoard: state.studentsBoard,
+        groupsBoard: state.groupsBoard
+      };
+      downloadFile(`لوحة-التحفيز-الكل_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
+      toast("تم تصدير JSON (الكل)");
+    }
+
+    async function importJSON(file, expectedMode){
+      try{
+        const txt = await file.text();
+        const data = JSON.parse(txt);
+
+        // Combined
+        if(data.mode === "all" && data.studentsBoard && data.groupsBoard){
+          // sanitize students
+          const sHeader = data.studentsBoard.header || {};
+          const sStudents = Array.isArray(data.studentsBoard.students) ? data.studentsBoard.students : [];
+          state.studentsBoard.header = { ...state.studentsBoard.header, ...sHeader };
+          state.studentsBoard.students = sStudents.map(s=>({
+            id: s.id || uid(),
+            name: (s.name||"").trim() || "بدون اسم",
+            awards: Array.isArray(s.awards) ? s.awards.filter(a=>a && a.type) : []
+          }));
+
+          // sanitize groups
+          const gHeader = data.groupsBoard.header || {};
+          const gGroups = Array.isArray(data.groupsBoard.groups) ? data.groupsBoard.groups : [];
+          state.groupsBoard.header = { ...state.groupsBoard.header, ...gHeader };
+          state.groupsBoard.groups = gGroups.map(g=>({
+            id: g.id || uid(),
+            name: (g.name||"").trim() || "مجموعة",
+            scores: {
+              calm: Math.max(0, Number(g.scores?.calm||0)),
+              coop: Math.max(0, Number(g.scores?.coop||0)),
+              speed: Math.max(0, Number(g.scores?.speed||0)),
+              accuracy: Math.max(0, Number(g.scores?.accuracy||0))
+            }
+          }));
+
+          state.activeMode = (data.activeMode === "groups") ? "groups" : "students";
+          setMode(state.activeMode);
+          saveState(true);
+          toast("تم الاستيراد ✅ (الكل)");
+          return;
+        }
+
+        // Students payload
+        if((data.mode === "students" || expectedMode === "students") && data.data?.students){
+          const h = data.data.header || {};
+          const arr = Array.isArray(data.data.students) ? data.data.students : [];
+          state.studentsBoard.header = { ...state.studentsBoard.header, ...h };
+          state.studentsBoard.students = arr.map(s=>({
+            id: s.id || uid(),
+            name: (s.name||"").trim() || "بدون اسم",
+            awards: Array.isArray(s.awards) ? s.awards.filter(a=>a && a.type) : []
+          }));
+          setMode("students");
+          saveState(true);
+          toast("تم الاستيراد ✅ (طلاب)");
+          return;
+        }
+
+        // Groups payload
+        if((data.mode === "groups" || expectedMode === "groups") && data.data?.groups){
+          const h = data.data.header || {};
+          const arr = Array.isArray(data.data.groups) ? data.data.groups : [];
+          state.groupsBoard.header = { ...state.groupsBoard.header, ...h };
+          state.groupsBoard.groups = arr.map(g=>({
+            id: g.id || uid(),
+            name: (g.name||"").trim() || "مجموعة",
+            scores: {
+              calm: Math.max(0, Number(g.scores?.calm||0)),
+              coop: Math.max(0, Number(g.scores?.coop||0)),
+              speed: Math.max(0, Number(g.scores?.speed||0)),
+              accuracy: Math.max(0, Number(g.scores?.accuracy||0))
+            }
+          }));
+          setMode("groups");
+          saveState(true);
+          toast("تم الاستيراد ✅ (مجموعات)");
+          return;
+        }
+
+        toast("ملف JSON غير معروف");
+      }catch(e){
+        toast("تعذر قراءة الملف");
+      }
+    }
+
+    // ========= PDF export =========
+    async function exportPDF(mode){
+      const { jsPDF } = window.jspdf;
+      const board = (mode === "groups") ? $("#boardGroups") : $("#boardStudents");
+
+      document.body.classList.add("exporting");
+      try{
+        await new Promise(r => setTimeout(r, 120));
+
+        const canvas = await html2canvas(board, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff"
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pdfW = pdf.internal.pageSize.getWidth();
+        const pdfH = pdf.internal.pageSize.getHeight();
+
+        const imgW = pdfW;
+        const imgH = (canvas.height * imgW) / canvas.width;
+
+        let heightLeft = imgH;
+        let position = 0;
+
+        pdf.addImage(imgData, "PNG", 0, position, imgW, imgH);
+        heightLeft -= pdfH;
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgH;
+          pdf.addPage();
+          pdf.addImage(imgData, "PNG", 0, position, imgW, imgH);
+          heightLeft -= pdfH;
+        }
+
+        const fileName = mode === "groups"
+          ? `لوحة-المجموعات_${new Date().toISOString().slice(0,10)}.pdf`
+          : `لوحة-الطلاب_${new Date().toISOString().slice(0,10)}.pdf`;
+
+        pdf.save(fileName);
+        toast("تم تصدير PDF");
+      } finally {
+        document.body.classList.remove("exporting");
+      }
+    }
+
+    // ========= Wire UI =========
+    function wire(){
+      // mode switch
+      $("#btnModeStudents").addEventListener("click", ()=> setMode("students"));
+      $("#btnModeGroups").addEventListener("click", ()=> setMode("groups"));
+
+      // students buttons
+      $("#s_add").addEventListener("click", addStudentsFromTextarea);
+      $("#s_sort").addEventListener("click", sortStudents);
+      $("#s_reset").addEventListener("click", ()=>{ if(confirm("تصفير نجوم الجميع؟")) resetStudents(); });
+      $("#s_clear").addEventListener("click", ()=>{ if(confirm("مسح جميع الأسماء؟")) clearStudents(); });
+      $("#s_pdf").addEventListener("click", ()=> exportPDF("students"));
+      $("#s_json").addEventListener("click", exportStudentsJSON);
+      $("#s_file_json").addEventListener("change", (e)=>{
+        const f = e.target.files?.[0];
+        if(f) importJSON(f, "students");
+        e.target.value = "";
+      });
+
+      // groups buttons
+      $("#g_add").addEventListener("click", addGroupsFromTextarea);
+      $("#g_sort").addEventListener("click", sortGroups);
+      $("#g_reset").addEventListener("click", ()=>{ if(confirm("تصفير نقاط الجميع؟")) resetGroups(); });
+      $("#g_clear").addEventListener("click", ()=>{ if(confirm("مسح جميع المجموعات؟")) clearGroups(); });
+      $("#g_pdf").addEventListener("click", ()=> exportPDF("groups"));
+      $("#g_json").addEventListener("click", exportGroupsJSON);
+      $("#g_file_json").addEventListener("change", (e)=>{
+        const f = e.target.files?.[0];
+        if(f) importJSON(f, "groups");
+        e.target.value = "";
+      });
+
+      // save now
+      $("#saveNow").addEventListener("click", ()=>{ saveState(true); toast("تم الحفظ"); });
+      $("#saveNow2").addEventListener("click", ()=>{ saveState(true); toast("تم الحفظ"); });
+
+      // export all
+      $("#exportAllJson").addEventListener("click", exportAllJSON);
+
+      bindInputs();
+      setupPalettes();
+    }
+
+    // ========= Init =========
+    (function init(){
+      // fixed footer everywhere
+      $("#footerInsideStudents").textContent = FOOTER_TEXT;
+      $("#footerInsideGroups").textContent = FOOTER_TEXT;
+      $("#printFooter").textContent = FOOTER_TEXT;
+
+      // ensure dates
+      if(!state.studentsBoard.header.date) state.studentsBoard.header.date = dateOnly();
+      if(!state.groupsBoard.header.date) state.groupsBoard.header.date = dateOnly();
+
+      // wire + render
+      wire();
+      setMode(state.activeMode);
+      renderAll();
+      saveState(true);
+    })();
+  </script>
+</body>
+</html>
